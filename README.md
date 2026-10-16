@@ -3,10 +3,7 @@
 A clean, white-background, professional-looking EV charging web app —
 styled closer to sites like bolt.earth, Tata EV's Charging Locator, and
 ChargeZone. No backend, no database, no external API keys. Everything runs
-on mock data in `src/data/mockData.js`, the browser's Geolocation API, and
-[lucide-react](https://lucide.dev) for clean line icons (no emoji, no
-AI-generated icon look).
-
+on mock data in `src/data/mockData.js`, the browser's Geolocation API.
 ## Run it
 
 ```bash
