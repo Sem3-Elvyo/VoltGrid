@@ -4,21 +4,6 @@ A clean, white-background, professional-looking EV charging web app —
 styled closer to sites like bolt.earth, Tata EV's Charging Locator, and
 ChargeZone. No backend, no database, no external API keys. Everything runs
 on mock data in `src/data/mockData.js`, the browser's Geolocation API.
-## Run it
-
-```bash
-npm install
-npm run dev
-```
-
-Then open the URL it prints (usually http://localhost:5173).
-
-To build a production version:
-
-```bash
-npm run build
-npm run preview
-```
 
 ## Structure
 
