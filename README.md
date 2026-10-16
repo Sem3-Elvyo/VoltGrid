@@ -95,10 +95,3 @@ the bottom, not a gate that blocks the rest of the app.
 - **Member 4 (Recommendation + History + Profile):**
   `src/pages/Recommendation.jsx` (scoring function at the top of the
   file), `src/pages/History.jsx`, and `src/pages/Profile.jsx`.
-
-## Replacing mock data with a real API later
-
-Everything reads from `src/data/mockData.js`. To connect a real backend,
-replace the exported arrays with data fetched in `useEffect` + `useState`
-in each page — the JSX and component props are already shaped to match,
-so nothing else needs to change.
