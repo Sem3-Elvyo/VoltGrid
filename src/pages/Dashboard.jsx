@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   BatteryCharging,
@@ -11,18 +11,18 @@ import {
   Loader2,
   ShieldAlert,
 } from "lucide-react";
-import {
-  currentUser,
-  myVehicle,
-  trendingStations,
-  favoriteStations,
-  stations,
-} from "../data/mockData.js";
 import StationCard from "../components/StationCard.jsx";
+import StationCardSkeleton from "../components/StationCardSkeleton.jsx";
 import LoginForm from "../components/LoginForm.jsx";
 import ImageStrip from "../components/ImageStrip.jsx";
+import { useGeolocation } from "../hooks/useGeolocation.js";
+import { selectAllStations } from "../store/slices/stationsSlice.js";
+import {
+  selectFavoriteStations,
+  selectTrendingStations,
+  selectAveragePrice,
+} from "../store/selectors.js";
 
-const nearbyForMap = stations.slice(0, 4);
 const pinPositions = [
   { top: "60%", left: "30%" },
   { top: "35%", left: "55%" },
@@ -31,37 +31,33 @@ const pinPositions = [
 ];
 
 export default function Dashboard() {
-  const [location, setLocation] = useState(null);
-  // status: "idle" | "requesting" | "granted" | "denied" | "unsupported"
-  const [locationStatus, setLocationStatus] = useState("idle");
+  // Everything below comes from the Redux store (no more hard-coded imports).
+  const stations = useSelector(selectAllStations);
+  const trendingStations = useSelector(selectTrendingStations);
+  const favoriteStations = useSelector(selectFavoriteStations);
+  const avgPriceNumber = useSelector(selectAveragePrice);
+  const profile = useSelector((s) => s.profile);
+  const user = useSelector((s) => s.auth.user);
+  const percent = useSelector((s) => s.charging.percent);
+  const stationsStatus = useSelector((s) => s.stations.status);
+  const loading = stationsStatus === "idle" || stationsStatus === "loading";
 
-  function requestLocation() {
-    if (!navigator.geolocation) {
-      setLocationStatus("unsupported");
-      return;
-    }
-    setLocationStatus("requesting");
-    // This is what actually triggers the browser's
-    // "Allow this site to access your location?" permission prompt.
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation({
-          lat: position.coords.latitude.toFixed(4),
-          lng: position.coords.longitude.toFixed(4),
-        });
-        setLocationStatus("granted");
-      },
-      () => setLocationStatus("denied")
-    );
-  }
+  // Keeps the JSX below unchanged: same shape as the old mock object, now live.
+  const myVehicle = {
+    ...profile.vehicle,
+    batteryPercent: percent,
+    rangeKm: Math.round((percent / 100) * profile.vehicle.fullRangeKm),
+  };
+  const nearbyForMap = stations.slice(0, 4);
+
+  // Custom hook replaces ~25 lines of geolocation code that used to live here.
+  const { location, status: locationStatus, request: requestLocation } = useGeolocation();
 
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
-  const avgPrice = (
-    stations.reduce((sum, s) => sum + s.price, 0) / stations.length
-  ).toFixed(1);
+  const avgPrice = avgPriceNumber.toFixed(1);
 
   return (
     <div>
@@ -70,7 +66,7 @@ export default function Dashboard() {
         <div className="container hero-grid">
           <div>
             <span className="hero-eyebrow">
-              <BatteryCharging size={14} /> {greeting}, {currentUser.name}
+              <BatteryCharging size={14} /> {greeting}, {profile.name}
             </span>
             <h1>Charge smarter, not just nearer.</h1>
             <p>
@@ -257,9 +253,11 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="grid grid-3">
-            {trendingStations.map((s) => (
-              <StationCard key={s.id} station={s} />
-            ))}
+            {loading
+              ? [1, 2, 3].map((n) => <StationCardSkeleton key={n} />)
+              : trendingStations.map((s) => (
+                  <StationCard key={s.id} station={s} />
+                ))}
           </div>
         </div>
       </section>
@@ -274,9 +272,16 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="grid grid-2">
-            {favoriteStations.map((s) => (
-              <StationCard key={s.id} station={s} />
-            ))}
+            {loading
+              ? [1, 2].map((n) => <StationCardSkeleton key={n} />)
+              : favoriteStations.map((s) => (
+                  <StationCard key={s.id} station={s} />
+                ))}
+            {!loading && favoriteStations.length === 0 && (
+              <p style={{ color: "var(--text-dim)" }}>
+                No favourites yet — tap the heart on any station.
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -309,8 +314,8 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Login form, right before the footer */}
-      <LoginForm />
+      {/* Login form, right before the footer (hidden once signed in) */}
+      {!user && <LoginForm />}
     </div>
   );
 }

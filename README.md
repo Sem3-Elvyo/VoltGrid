@@ -77,3 +77,76 @@ the bottom, not a gate that blocks the rest of the app.
 - **Member 4 (Recommendation + History + Profile):**
   `src/pages/Recommendation.jsx` (scoring function at the top of the
   file), `src/pages/History.jsx`, and `src/pages/Profile.jsx`.
+
+---
+
+## v2: Advanced React + Redux Toolkit
+
+The app was refactored from local `useState` everywhere to a proper global-state architecture.
+Still no backend: the "API" is a fake async function with latency and failures (`src/api/stationsApi.js`).
+
+### Redux store (`src/store/`)
+
+| Slice | Holds | Notable concept |
+|---|---|---|
+| `stations` | all stations + `status` / `error` | `createAsyncThunk`, `createEntityAdapter`, loading / error states |
+| `filters` | search, type, price, distance, sort | one generic `setFilter` reducer, `resetFilters` |
+| `favorites` | favourite station ids | toggled from any card, shown in the navbar |
+| `charging` | battery %, status, target, selected station | state machine (`idle → charging → complete`) |
+| `history` | past sessions | `prepare` callback + `nanoid` for ids |
+| `preferences` | recommendation weights + presets | drives the live ranking |
+| `profile` | user + vehicle | slice reacting to another slice's action (`extraReducers`) |
+| `auth` | logged-in user | async login thunk with `rejectWithValue` |
+| `notifications` | toast queue | dispatched from anywhere (incl. middleware) |
+
+Also in the store: **memoised selectors** (`createSelector`, `selectors.js`), **listener middleware**
+(`listeners.js`: side effects like auto-saving a finished charging session), and a **custom persistence
+middleware** (`persist.js`: saves state to `localStorage`, restored through `preloadedState`).
+
+### Other React concepts used
+Context API (`ThemeContext`), custom hooks (`useDebounce`, `useGeolocation`, `useChargingTicker`,
+`useLiveStations`, `useTheme`), `useReducer` (cost calculator), `useMemo` / `useCallback` / `React.memo`,
+`React.lazy` + `Suspense` (code splitting), Error Boundary, protected routes, dynamic route params
+(`/stations/:stationId`), controlled forms with validation, skeleton loaders.
+
+See **`docs/EVALUATION.md`** for a demo script and viva Q&A.
+
+
+---
+
+## v3: Forms, a second Context, and navigation polish
+
+| Addition | Where | Rubric area |
+|---|---|---|
+| Reusable form components (`TextField`, `PasswordField`, `SelectField`) with label, hint, error and ARIA wiring | `src/components/form/FormField.jsx` | Form handling |
+| `useForm` hook: validate on blur, then live; validate-all on submit | `src/hooks/useForm.js` | Form handling |
+| Composable validation rules incl. a cross-field rule (slot can't pass midnight) | `src/utils/validators.js` | Form handling |
+| "Reserve a slot" form, saved to a new `bookings` slice, listed/cancelled on History | `src/components/BookingForm.jsx`, `src/store/slices/bookingsSlice.js` | Forms + Redux Toolkit |
+| Login + Profile refactored onto the shared form pieces (password show/hide + strength) | `LoginForm.jsx`, `Profile.jsx` | Form handling |
+| `CompareContext`: compare up to 3 stations from any card, floating tray, `/compare` page | `src/context/`, `CompareBar.jsx`, `pages/Compare.jsx` | Context API |
+| Breadcrumbs, scroll-to-top on route change, real 404 page | `Breadcrumbs.jsx`, `ScrollToTop.jsx`, `pages/NotFound.jsx` | Navigation layout |
+| Unit tests (Vitest) for validators and slices; CI runs lint + test before deploy | `src/__tests__/`, `deploy.yml` | Code quality |
+
+**State rule of thumb we follow:** shared business data → Redux; temporary UI state shared across
+components (theme, compare list) → Context; state used by one form/component → `useState`/`useForm`.
+
+## Run it
+
+```bash
+npm install
+npm run dev     # local dev server
+npm test        # unit tests
+npm run lint
+npm run build   # production build (deployed to GitHub Pages by CI)
+```
+
+## Team
+
+| Member | Roll no. | Area (see "Where each team member's work lives") |
+|---|---|---|
+| _Name 1_ | | Dashboard + map |
+| _Name 2_ | | Stations + filters + compare |
+| _Name 3_ | | Simulator + cost calculator |
+| _Name 4_ | | Forms, bookings, Redux store |
+
+Git workflow and commit expectations: `docs/TEAM_WORKFLOW.md`. Marking-scheme mapping: `docs/EVALUATION.md`.

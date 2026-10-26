@@ -1,4 +1,22 @@
+import { Link } from "react-router-dom";
 import { Zap } from "lucide-react";
+
+// Working links use <Link> (client-side routing). Links to pages we haven't built yet
+// are rendered as disabled "Soon" items on purpose, so nobody lands on a dead page.
+const columns = [
+  { title: "Product", links: [
+    { to: "/", label: "Dashboard" }, { to: "/stations", label: "Find stations" },
+    { to: "/simulator", label: "Charging" }, { to: "/recommendation", label: "Recommendations" },
+  ] },
+  { title: "Company", links: [
+    { to: "/about", label: "About us" },
+    { label: "Careers", soon: true }, { label: "Partners", soon: true }, { label: "Press", soon: true },
+  ] },
+  { title: "Support", links: [
+    { to: "/help", label: "Help center" }, { to: "/contact", label: "Contact us" },
+    { to: "/privacy", label: "Privacy policy" }, { to: "/terms", label: "Terms of service" },
+  ] },
+];
 
 export default function Footer() {
   return (
@@ -6,47 +24,30 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <div className="footer-brand">
-              <Zap size={18} strokeWidth={2.5} />
-              VoltGrid
-            </div>
+            <div className="footer-brand"><Zap size={18} strokeWidth={2.5} /> VoltGrid</div>
             <p className="footer-tagline">
-              Find, filter and pay for EV charging in one place — with
-              real-time recommendations built for your car.
+              Find, filter and pay for EV charging in one place — with real-time recommendations built for your car.
             </p>
           </div>
-
-          <div className="footer-col">
-            <h4>Product</h4>
-            <ul>
-              <li><a href="/">Dashboard</a></li>
-              <li><a href="/stations">Find stations</a></li>
-              <li><a href="/simulator">Charging</a></li>
-              <li><a href="/recommendation">Recommendations</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-col">
-            <h4>Company</h4>
-            <ul>
-              <li><a href="#about">About us</a></li>
-              <li><a href="#careers">Careers</a></li>
-              <li><a href="#partners">Partners</a></li>
-              <li><a href="#press">Press</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-col">
-            <h4>Support</h4>
-            <ul>
-              <li><a href="#help">Help center</a></li>
-              <li><a href="#contact">Contact us</a></li>
-              <li><a href="#privacy">Privacy policy</a></li>
-              <li><a href="#terms">Terms of service</a></li>
-            </ul>
-          </div>
+          {columns.map((col) => (
+            <div className="footer-col" key={col.title}>
+              <h4>{col.title}</h4>
+              <ul>
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    {l.soon ? (
+                      <span className="link-soon" aria-disabled="true" title="Coming soon">
+                        {l.label} <em>Soon</em>
+                      </span>
+                    ) : (
+                      <Link to={l.to}>{l.label}</Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} VoltGrid. All rights reserved.</span>
           <span>Made for drivers, not dashboards.</span>
