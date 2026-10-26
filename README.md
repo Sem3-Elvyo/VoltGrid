@@ -140,73 +140,13 @@ npm run lint
 npm run build   # production build (deployed to GitHub Pages by CI)
 ```
 
-## Team Responsibilities
+## Team
 
-### Team VoltGrid — EV Charging App
-
-| Team Member | Assigned Module | Responsibilities |
+| Member | Roll no. | Area (see "Where each team member's work lives") |
 |---|---|---|
-| **Palak** | Charging Simulator & Cost Calculator | Live charging simulation, battery percentage updates, charging status management and charging cost estimation |
-| **Lubhav** | Dashboard, Map & Location API | Dashboard UI, hero section, vehicle and battery cards, mock map, station markers and browser geolocation |
-| **Nibhi Khanna** | Recommendation System, Profile, History & Analytics | Station recommendation and ranking algorithm, user and vehicle profile management, charging history, session records, analytics and charging statistics |
-| **Simran** | Charging Stations, Search, Filters & Station API | Station listing, search functionality, AC/DC and fast-charging filters, price and distance filters, availability filtering and station API integration |
+| _Name 1_ | | Dashboard + map |
+| _Name 2_ | | Stations + filters + compare |
+| _Name 3_ | | Simulator + cost calculator |
+| _Name 4_ | | Forms, bookings, Redux store |
 
-### 1. Palak — Charging Simulator & Cost Calculator
-
-**Primary file:** `src/pages/Simulator.jsx`
-
-Responsibilities:
-- Develop the live charging simulator.
-- Update battery percentage over time.
-- Manage charging states: idle, charging and complete.
-- Implement the charging cost calculator.
-- Connect charging functionality with Redux Toolkit.
-- Support saving completed charging sessions to history.
-
-### 2. Lubhav — Dashboard, Map & Location API
-
-**Primary files:** `src/pages/Dashboard.jsx`, `src/components/ImageStrip.jsx`
-
-Responsibilities:
-- Develop the main dashboard and hero section.
-- Display vehicle details, battery status and quick statistics.
-- Create the mock map with charging station markers.
-- Integrate browser geolocation using the Geolocation API.
-- Handle location permission states: idle, requesting, granted, denied and unsupported.
-- Display trending and favourite stations.
-- Integrate the India EV image gallery.
-
-### 3. Nibhi Khanna — Recommendation System, Profile, History & Analytics
-
-**Primary files:** `src/pages/Recommendation.jsx`, `src/pages/Profile.jsx`, `src/pages/History.jsx`
-
-Responsibilities:
-- Develop the station recommendation and ranking algorithm.
-- Rank charging stations using factors such as price, distance and user preferences.
-- Implement recommendation weights and preference presets.
-- Develop editable user and vehicle profile functionality.
-- Display previous charging sessions and session records.
-- Build charging history tables and analytics visualisations.
-- Display charging statistics, usage summaries and session-related insights.
-- Integrate relevant Redux slices and selectors for recommendations, profile and history.
-
-### 4. Simran — Charging Stations, Search, Filters & Station API
-
-**Primary files:** `src/pages/Stations.jsx`, `src/components/StationCard.jsx`, `src/api/stationsApi.js`
-
-Responsibilities:
-- Develop the charging station listing page.
-- Implement station search and sorting.
-- Add filters for AC/DC type, fast charging, price, distance and availability.
-- Create reusable charging station cards.
-- Integrate station data through the mock asynchronous Station API.
-- Handle loading and error states.
-- Connect station data with Redux Toolkit and relevant selectors.
-- Support favourite stations and station comparison integration.
-
-### Shared Team Responsibilities
-
-All team members are responsible for integrating their modules into the common application, testing their functionality, resolving bugs, maintaining code quality and coordinating through Git and GitHub.
-
-The presentation and PowerPoint responsibilities will be coordinated separately by the team.
 Git workflow and commit expectations: `docs/TEAM_WORKFLOW.md`. Marking-scheme mapping: `docs/EVALUATION.md`.

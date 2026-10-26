@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Search, RefreshCw, RotateCcw, WifiOff } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Search, RefreshCw, RotateCcw, WifiOff, Sparkles } from "lucide-react";
 import StationCard from "../components/StationCard.jsx";
 import StationCardSkeleton from "../components/StationCardSkeleton.jsx";
 import { useDebounce } from "../hooks/useDebounce.js";
@@ -34,9 +35,14 @@ export default function Stations() {
 
   return (
     <div className="container">
-      <div className="page-header">
-        <h1>Charging stations</h1>
-        <p>Search and filter every station near you.</p>
+      <div className="page-header page-header-row">
+        <div>
+          <h1>Find a charger</h1>
+          <p>Search and filter every station near you.</p>
+        </div>
+        <Link to="/recommendation" className="btn btn-outline">
+          <Sparkles size={15} /> Best match for my car
+        </Link>
       </div>
 
       <div className="toolbar">
@@ -59,16 +65,16 @@ export default function Stations() {
         </div>
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div className="filter-panel">
+      <div className="search-wrap">
         <input
           type="text"
           className="search-input"
-          style={{ paddingLeft: 42 }}
           placeholder="Search stations by name…"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <Search size={16} style={{ position: "absolute", left: 14, top: 15, color: "var(--text-dim)" }} />
+        <Search size={16} className="search-icon" />
       </div>
 
       <div className="filter-bar">
@@ -108,6 +114,7 @@ export default function Stations() {
         <button className="btn btn-ghost btn-sm" onClick={handleReset}>
           <RotateCcw size={14} /> Reset
         </button>
+      </div>
       </div>
 
       {status === "failed" ? (

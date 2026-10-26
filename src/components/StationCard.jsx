@@ -27,10 +27,10 @@ function StationCard({ station }) {
             <span className="meta-item"><MapPin size={13} /> {station.distanceKm} km</span>
             <span className="meta-item">{station.type}</span>
           </div>
+          <span className={"status-dot " + (station.available ? "on" : "off")}>
+            {station.available ? "Available" : "In use"}
+          </span>
         </div>
-        <span className={"status-dot " + (station.available ? "on" : "off")}>
-          {station.available ? "Available" : "In use"}
-        </span>
       </div>
 
       <div className="sc-stats">

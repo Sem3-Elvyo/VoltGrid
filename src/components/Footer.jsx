@@ -5,8 +5,8 @@ import { Zap } from "lucide-react";
 // are rendered as disabled "Soon" items on purpose, so nobody lands on a dead page.
 const columns = [
   { title: "Product", links: [
-    { to: "/", label: "Dashboard" }, { to: "/stations", label: "Find stations" },
-    { to: "/simulator", label: "Charging" }, { to: "/recommendation", label: "Recommendations" },
+    { to: "/stations", label: "Find stations" }, { to: "/recommendation", label: "Best match" },
+    { to: "/simulator", label: "Charging" }, { to: "/compare", label: "Compare" },
   ] },
   { title: "Company", links: [
     { to: "/about", label: "About us" },
@@ -24,9 +24,9 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <div className="footer-brand"><Zap size={18} strokeWidth={2.5} /> VoltGrid</div>
+            <div className="footer-brand"><span className="brand-mark"><Zap size={15} strokeWidth={2.75} /></span> VoltGrid</div>
             <p className="footer-tagline">
-              Find, filter and pay for EV charging in one place — with real-time recommendations built for your car.
+              Find, compare and plan EV charging in one place, with recommendations built around your car.
             </p>
           </div>
           {columns.map((col) => (
@@ -50,7 +50,7 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} VoltGrid. All rights reserved.</span>
-          <span>Made for drivers, not dashboards.</span>
+          <span>Made for drivers in India.</span>
         </div>
       </div>
     </footer>
